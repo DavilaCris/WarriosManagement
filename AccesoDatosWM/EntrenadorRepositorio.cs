@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -103,6 +105,28 @@ namespace AccesoDatosWM
                     WHERE ID_ENTRENADOR = @IdEntrenador";
 
                 return conexion.Execute(sql, entrenador) > 0;
+            }
+        }
+        public static Entrenador ObtenerEntrenadorPorId(int idEntrenador)
+        {
+            using (var conexion = Connexion.GetSqlConnection())
+            {
+                string sql = @"
+            SELECT 
+                ID_ENTRENADOR,
+                NOMBRE,
+                APELLIDO,
+                FECHA_NACIMIENTO,
+                NACIONALIDAD,
+                CINTURON,
+                CIUDAD,
+                NUMERO_CALLE,
+                COD_POSTAL,
+                ESCUELA
+            FROM ENTRENADOR
+            WHERE ID_ENTRENADOR = @IdEntrenador";
+
+                return conexion.QueryFirstOrDefault<Entrenador>(sql, new { IdEntrenador = idEntrenador });
             }
         }
     }

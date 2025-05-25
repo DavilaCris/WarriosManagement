@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using AccesoDatosWM;
@@ -15,6 +16,7 @@ namespace WarriosManagement
 
         public VistaRankingPorCategoria(int idCategoria, string nombreCategoria)
         {
+
             this.idCategoria = idCategoria;
             this.nombreCategoria = nombreCategoria;
 
@@ -23,6 +25,7 @@ namespace WarriosManagement
             this.Text = $"Ranking - {nombreCategoria}";
             this.FormClosing += cerrar;
             cbCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
+
             var skinManager = MaterialSkinManager.Instance;
             skinManager.AddFormToManage(this);
             skinManager.Theme = MaterialSkinManager.Themes.DARK;
@@ -34,13 +37,12 @@ namespace WarriosManagement
                 TextShade.WHITE
             );
 
-            this.Shown += (s, e) => CargarRanking();
+            this.Load += (s, e) => CargarRanking();
             dgvRanking.CellDoubleClick += dgvRanking_CellDoubleClick;
 
             categorias();
             cbCategoria.SelectedIndexChanged += CbCategoria_SelectedIndexChanged;
 
-            // Configurar placeholder y eventos del buscador
             txtBuscarNombre.Text = "Buscar atleta...";
             txtBuscarNombre.ForeColor = Color.Gray;
 
@@ -69,23 +71,55 @@ namespace WarriosManagement
 
         private void CargarRanking()
         {
-            try
+            dgvRanking.Columns.Clear();
+            dgvRanking.Rows.Clear();
+
+            // Columnas (incluye IdAtleta oculta)
+            dgvRanking.Columns.Add("IdAtleta", "IdAtleta");
+            dgvRanking.Columns["IdAtleta"].Visible = false;
+            dgvRanking.Columns.Add("Nombre", "Nombre");
+            dgvRanking.Columns.Add("Apellido", "Apellido");
+            dgvRanking.Columns.Add("DNI", "DNI");
+            dgvRanking.Columns.Add("FechaNacimiento", "Fecha de Nacimiento");
+            dgvRanking.Columns.Add("Nacionalidad", "Nacionalidad");
+            dgvRanking.Columns.Add("Cinturon", "Cinturón");
+            dgvRanking.Columns.Add("Puntos", "Puntos");
+            dgvRanking.Columns.Add("Lateralidad", "Lateralidad");
+            dgvRanking.Columns.Add("Peso", "Peso");
+            dgvRanking.Columns.Add("NombreCategoria", "Categoría");
+            dgvRanking.Columns.Add("Posicion", "Posición");
+
+            var lista = RankingRepositorio.ObtenerRankingPorCategoria(idCategoria);
+            if (lista == null) return;
+
+            foreach (var atleta in lista)
             {
-                dgvRanking.SuspendLayout();
-                dgvRanking.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-
-                var lista = RankingRepositorio.ObtenerRankingPorCategoria(idCategoria);
-                dgvRanking.DataSource = lista;
-
-                if (dgvRanking.Columns.Contains("IdAtleta"))
-                    dgvRanking.Columns["IdAtleta"].Visible = false;
-
-                dgvRanking.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dgvRanking.Rows.Add(
+                    atleta.IdAtleta,
+                    atleta.Nombre,
+                    atleta.Apellido,
+                    atleta.DNI,
+                    atleta.FechaNacimiento.ToString("dd/MM/yyyy"),
+                    atleta.Nacionalidad,
+                    atleta.Cinturon,
+                    atleta.Puntos,
+                    atleta.Lateralidad,
+                    atleta.Peso.ToString("0.0"),
+                    atleta.NombreCategoria,
+                    atleta.Posicion
+                );
             }
-            finally
-            {
-                dgvRanking.ResumeLayout();
-            }
+
+            dgvRanking.DefaultCellStyle.ForeColor = Color.White;
+            dgvRanking.DefaultCellStyle.BackColor = Color.FromArgb(30, 30, 30);
+            dgvRanking.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvRanking.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 45, 45);
+            dgvRanking.DefaultCellStyle.SelectionBackColor = Color.DarkSlateGray;
+            dgvRanking.DefaultCellStyle.SelectionForeColor = Color.White;
+
+            dgvRanking.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvRanking.ClearSelection();
+            dgvRanking.Refresh();
         }
 
         private void BuscarPorNombreTiempoReal()
@@ -99,16 +133,44 @@ namespace WarriosManagement
             }
 
             var resultados = RankingRepositorio.BuscarRankingPorNombre(textoBusqueda);
-            dgvRanking.DataSource = resultados;
+            dgvRanking.Rows.Clear();
+
+            foreach (var atleta in resultados)
+            {
+                dgvRanking.Rows.Add(
+                    atleta.IdAtleta,
+                    atleta.Nombre,
+                    atleta.Apellido,
+                    atleta.DNI,
+                    atleta.FechaNacimiento.ToString("dd/MM/yyyy"),
+                    atleta.Nacionalidad,
+                    atleta.Cinturon,
+                    atleta.Puntos,
+                    atleta.Lateralidad,
+                    atleta.Peso.ToString("0.0"),
+                    atleta.NombreCategoria,
+                    atleta.Posicion
+                );
+            }
+
+            dgvRanking.ClearSelection();
         }
 
         private void dgvRanking_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && dgvRanking.Rows[e.RowIndex].Cells["IdAtleta"].Value != null)
+            if (e.RowIndex >= 0)
             {
-                int idAtleta = Convert.ToInt32(dgvRanking.Rows[e.RowIndex].Cells["IdAtleta"].Value);
-                var vistaAtleta = new VistaAtleta(idAtleta);
-                vistaAtleta.ShowDialog();
+                object valor = dgvRanking.Rows[e.RowIndex].Cells["IdAtleta"].Value;
+                if (valor != null && int.TryParse(valor.ToString(), out int id))
+                {
+                    var vista = new VistaAtletaSimple(id);
+                    vista.ShowDialog();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo obtener el Id del atleta.");
+                }
             }
         }
 

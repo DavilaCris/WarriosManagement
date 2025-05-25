@@ -29,14 +29,14 @@ namespace WarriosManagement
                 TextShade.WHITE       // Texto blanco
             );
 
-           /* var hash = BCrypt.Net.BCrypt.HashPassword("Visioncris1+");
+          /* var hash = BCrypt.Net.BCrypt.HashPassword("1234");
 
            var usuario = new Usuario
             {
-                Email = "staff@staff.com",
+                Email = "entre@entre.com",
                 ContrasenaHash = Encoding.UTF8.GetBytes(hash),
-                TipoUsuario = "STAFF",
-                IdStaff = 21
+                TipoUsuario = "ENTRENADOR",
+                IdStaff = 3
             };
             bool resultado = UsuarioRepositorio.CrearUsuarioAdministrativo(usuario);
 
@@ -122,7 +122,7 @@ namespace WarriosManagement
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var rank = new VistaRankingPorCategoria(); // o el formulario que corresponda
+            var rank = new VistaRankingPorCategoria(); 
             rank.Show();
             this.Hide();
         }

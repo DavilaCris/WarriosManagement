@@ -36,7 +36,7 @@ namespace AccesoDatosWM
             {
                 string sql = @"
                     INSERT INTO USUARIOS (
-                        EMAIL, CONTRASENA_HASH, TIPO_USUARIO, ID_STAFF
+                        EMAIL, CONTRASENA_HASH, TIPO_USUARIO, ID_ENTRENADOR
                     )
                     VALUES (
                         @Email, @ContrasenaHash, @TipoUsuario, @IdStaff

@@ -23,21 +23,21 @@ namespace WarriosManagement
             skinManager.AddFormToManage(this);
             skinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             skinManager.ColorScheme = new ColorScheme(
-                Primary.BlueGrey900,  // Fondo principal muy oscuro
-                Primary.BlueGrey800,  // Fondo de barra de título
-                Primary.BlueGrey500,  // Color de controles activos
-                Accent.Cyan700,       // Color de acento como el texto que usas
-                TextShade.WHITE       // Texto blanco
+                Primary.BlueGrey900,
+                Primary.BlueGrey800,
+                Primary.BlueGrey500,
+                Accent.Cyan700,
+                TextShade.WHITE
             );
             InicializarEstadoInicial();
             InicializarCombos();
             CargarArbitrosYAtletas();
+            cbCategoria.SelectedIndexChanged += cbCategoria_SelectedIndexChanged;
         }
-
         private void InicializarEstadoInicial()
         {
             DateTime fecha = DateTime.Today;
-            this.lblFecha.Text = "" + fecha.ToShortDateString();
+            this.lblFecha.Text = fecha.ToShortDateString();
 
             idTorneoActual = RepositorioTorneos.BuscarIdTorneoPorFecha(fecha);
 
@@ -82,10 +82,12 @@ namespace WarriosManagement
             cbCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
+
+
         private void InicializarCombos()
         {
             cbAccion.Items.Clear();
-            cbAccion.Items.Add("Acción");
+            cbAccion.Items.Add("-- Acción --");
             cbAccion.Items.AddRange(new object[]
             {
                 "IPPON", "WAZAARI", "YUKO", "CHUKOKU", "KEYOKU",
@@ -94,17 +96,17 @@ namespace WarriosManagement
             cbAccion.SelectedIndex = 0;
 
             cbExtremidad.Items.Clear();
-            cbExtremidad.Items.Add("Extremidad");
+            cbExtremidad.Items.Add("-- Extremidad --");
             cbExtremidad.Items.AddRange(new object[] { "MANO", "PIE" });
             cbExtremidad.SelectedIndex = 0;
 
             cbLateralidad.Items.Clear();
-            cbLateralidad.Items.Add("Lateralidad");
+            cbLateralidad.Items.Add("-- Lateralidad --");
             cbLateralidad.Items.AddRange(new object[] { "DERECHA", "IZQUIERDA" });
             cbLateralidad.SelectedIndex = 0;
 
             cbBanderas.Items.Clear();
-            cbBanderas.Items.Add("Banderas");
+            cbBanderas.Items.Add("--  Banderas --");
             cbBanderas.Items.AddRange(new object[] { "1", "2", "3", "4", "5" });
             cbBanderas.SelectedIndex = 0;
         }
@@ -161,7 +163,6 @@ namespace WarriosManagement
                 cbBanderas.Enabled = true;
                 txtGanador.Enabled = false;
                 cbAtletaPuntos.Enabled = true;
-
                 materialButton1.Enabled = true;
             }
             catch (Exception ex)
@@ -174,19 +175,19 @@ namespace WarriosManagement
     new Atleta { IdAtleta = Convert.ToInt32(cbAtletaAka.SelectedValue), Nombre = cbAtletaAka.Text },
     new Atleta { IdAtleta = Convert.ToInt32(cbAtletaAo.SelectedValue), Nombre = cbAtletaAo.Text }
 };
-           
-           
+
+
             cbAtletaPuntos.DataSource = atletasDelEnfrentamiento;
             cbAtletaPuntos.DisplayMember = "Nombre";
             cbAtletaPuntos.ValueMember = "IdAtleta";
             cbAtletaPuntos.SelectedIndex = 0;
+            btnGuardar.Enabled = false;
         }
 
         private void materialButton1_Click(object sender, EventArgs e)
         {
             try
             {
-                // Validar selección
                 if (cbAtletaPuntos.SelectedIndex == 0 ||
                     cbAccion.SelectedIndex == 0 ||
                     cbExtremidad.SelectedIndex == 0 ||
@@ -197,10 +198,8 @@ namespace WarriosManagement
                     return;
                 }
 
-                // Obtener el ID del enfrentamiento actual
                 int idEnfrentamiento = PuntosRepositorio.ObtenerUltimoEnfrentamiento();
-              
-                // Parsear el valor de banderas de forma segura
+
                 bool parseOk = int.TryParse(cbBanderas.SelectedItem.ToString(), out int cantidadBanderas);
                 if (!parseOk)
                 {
@@ -208,7 +207,6 @@ namespace WarriosManagement
                     return;
                 }
 
-                // Crear objeto Puntos
                 var punto = new Punto
                 {
                     IdEnfrentamiento = idEnfrentamiento,
@@ -219,36 +217,20 @@ namespace WarriosManagement
                     CantidadBanderas = cantidadBanderas
                 };
 
-                // Guardar en BD
                 bool exito = PuntosRepositorio.GuardarPunto(punto);
                 string ganador = EnfrentamientoRepositorio.ObtenerNombreGanadorActual(idEnfrentamiento);
                 txtMarcador.Text = EnfrentamientoRepositorio.ObtenerMarcadorDesdeVista(idEnfrentamiento);
 
-                if (!string.IsNullOrEmpty(ganador))
-                {
-                    txtGanador.Text = ganador;
-                }
-                else
-                {
-                    txtGanador.Text = "Sin definir";
-                }
+                txtGanador.Text = string.IsNullOrEmpty(ganador) ? "Sin definir" : ganador;
 
-                if (exito)
-                {
-                    MessageBox.Show("Punto registrado correctamente.");
-                }
-                else
-                {
-                    MessageBox.Show("Ocurrió un error al registrar el punto.");
-                }
+                MessageBox.Show(exito ? "Punto registrado correctamente." : "Ocurrió un error al registrar el punto.");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al guardar punto: " + ex.Message);
-
             }
+
             InicializarCombos();
-          
         }
 
 
@@ -323,8 +305,21 @@ namespace WarriosManagement
             cbArbitro4.DisplayMember = "NombreCompleto";
             cbArbitro4.ValueMember = "IdArbitro";
 
-            // Atletas
-            var atletas = AtletaRepositorio.ObtenerAtletas();
+          
+        }
+        private void cbCategoria_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbCategoria.SelectedIndex > 0 && cbCategoria.SelectedValue is int idCategoria)
+            {
+                CargarAtletasPorCategoria(idCategoria);
+                cbAtletaAka.Enabled = true;
+                cbAtletaAo.Enabled = true;
+            }
+        }
+        private void CargarAtletasPorCategoria(int id)
+        {
+
+            var atletas = AtletaRepositorio.ObtenerAtletasPorCategoria(id);
 
             var atletasAka = atletas
                 .Select(a => new {
@@ -347,18 +342,43 @@ namespace WarriosManagement
             cbAtletaAo.DataSource = atletasAo;
             cbAtletaAo.DisplayMember = "NombreCompleto";
             cbAtletaAo.ValueMember = "IdAtleta";
+
+
         }
 
         private void btnTerminar_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Se inicia nuevo enfrentamiento.");
+
             CargarArbitrosYAtletas();
             InicializarEstadoInicial();
+
+            // Si una categoría ya está seleccionada (por ejemplo, ID > 0), recargar atletas
+            if (cbCategoria.SelectedValue is int idCategoria && idCategoria > 0)
+            {
+                CargarAtletasPorCategoria(idCategoria);
+            }
+
+            // Reset de combos de atletas (por si quedaron residuos anteriores)
+            cbAtletaAka.SelectedIndex = 0;
+            cbAtletaAo.SelectedIndex = 0;
+
+            // Reset de puntuación y ganador
+            txtMarcador.Text = "";
+            txtGanador.Text = "";
+
+            // Desactivar secciones que no deben estar activas aún
+            cbAccion.Enabled = false;
+            cbExtremidad.Enabled = false;
+            cbLateralidad.Enabled = false;
+            cbBanderas.Enabled = false;
+            cbAtletaPuntos.Enabled = false;
+            materialButton1.Enabled = false;
         }
         private void cerrar(object sender, FormClosingEventArgs e)
         {
 
-            Environment.Exit(0);
+            this.Dispose();
         }
     }
 }

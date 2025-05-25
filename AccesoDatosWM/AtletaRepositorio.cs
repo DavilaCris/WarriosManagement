@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,12 +11,14 @@ using Modelos;
 
 namespace AccesoDatosWM
 {
- 
+
     public class AtletaRepositorio
     {
         //metodo que sirve para la solicitud de alta del atleta
-        public int AltaAtleta(Atleta atleta) {
-            using (var conexion = Connexion.GetSqlConnection()) {
+        public int AltaAtleta(Atleta atleta)
+        {
+            using (var conexion = Connexion.GetSqlConnection())
+            {
                 String sql = "";
                 sql = sql + "INSERT INTO [dbo].[ATLETA] " + "\n";
                 sql = sql + "           ([NOMBRE] " + "\n";
@@ -48,20 +52,34 @@ namespace AccesoDatosWM
                 });
                 return insertadas;
             }
-       
+
 
         }
 
-       
-            public static List<Atleta> ObtenerAtletas()
-            {
-                using (var conexion = Connexion.GetSqlConnection())
-                {
-                    string sql = "SELECT ID_ATLETA AS IdAtleta, NOMBRE, APELLIDO FROM ATLETA";
-                    return conexion.Query<Atleta>(sql).ToList();
-                }
-            }
 
+        public static List<Atleta> ObtenerAtletas()
+        {
+            using (var conexion = Connexion.GetSqlConnection())
+            {
+                string sql = "SELECT ID_ATLETA AS IdAtleta, NOMBRE, APELLIDO FROM ATLETA";
+                return conexion.Query<Atleta>(sql).ToList();
+            }
+        }
+        public static List<Atleta> ObtenerAtletasPorCategoria(int idCategoria)
+        {
+            using (var conexion = Connexion.GetSqlConnection())
+            {
+                string sql = @"
+            SELECT 
+                ID_ATLETA AS IdAtleta,
+                NOMBRE,
+                APELLIDO
+            FROM ATLETA
+            WHERE ID_CATEGORIA = @idCategoria";
+
+                return conexion.Query<Atleta>(sql, new { idCategoria }).ToList();
+            }
+        }
         public static Atleta ObtenerAtletaPorId(int idAtleta)
         {
             using (var conexion = Connexion.GetSqlConnection())
@@ -104,6 +122,25 @@ namespace AccesoDatosWM
             ORDER BY APELLIDO, NOMBRE";
 
                 return conexion.Query<Atleta>(sql, new { id = idEntrenador }).ToList();
+            }
+        }
+
+
+        public static void ActualizarImagen(int idAtleta, byte[] imagen)
+        {
+            using (var conexion = Connexion.GetSqlConnection())
+            {
+                string query = @"
+                UPDATE ATLETA 
+                SET IMAGEN = @Imagen 
+                WHERE ID_ATLETA = @IdAtleta";
+
+                using (var comando = new SqlCommand(query, conexion))
+                {
+                    comando.Parameters.AddWithValue("@IdAtleta", idAtleta);
+                    comando.Parameters.Add("@Imagen", SqlDbType.VarBinary).Value = (object)imagen ?? DBNull.Value;
+                    comando.ExecuteNonQuery();
+                }
             }
         }
 

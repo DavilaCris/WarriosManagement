@@ -32,11 +32,37 @@ namespace WarriosManagement
                 TextShade.WHITE       // Texto blanco
             );
 
-
+            CargarDatosEntrenador();
             categorias();
             cbCategoria.SelectedIndexChanged += CbCategoria_SelectedIndexChanged;
             CargarComboAlumnos(user);
         }
+
+        private void CargarDatosEntrenador()
+        {
+            var entrenador = EntrenadorRepositorio.ObtenerEntrenadorPorId(user);
+            if (entrenador != null)
+            {
+                lblNombre.Text = $"Nombre: {entrenador.Nombre}";
+                lblApellido.Text = $"Apellido: {entrenador.Apellido}";
+                lblNacionalidad.Text = $"Nacionalidad: {entrenador.Nacionalidad}";
+                lblCinturon.Text = $"Cinturón: {entrenador.Cinturon}";
+
+                gridUltimasPeleas.DataSource = HistorialRepositorio.ObtenerHistorialPorAtleta(user);
+                if (gridUltimasPeleas.Columns.Contains("ResultadoFormateado"))
+                {
+                    gridUltimasPeleas.Columns["ResultadoFormateado"].HeaderText = "Historial de Enfrentamientos";
+                }
+
+                // Asignar título al formulario con nombre completo y categoría
+                this.Text = $"{entrenador.Nombre} {entrenador.Apellido} - {entrenador.Cinturon}";
+            }
+            else
+            {
+                MessageBox.Show("No se encontraron datos para este atleta.");
+            }
+        }
+
 
         private void cerrar(object sender, FormClosingEventArgs e)
         {
@@ -95,5 +121,6 @@ namespace WarriosManagement
                 cbAlumnos.SelectedIndex = 0;
             };
         }
+       
     }
 }

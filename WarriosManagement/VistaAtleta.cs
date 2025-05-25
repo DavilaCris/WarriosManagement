@@ -23,19 +23,17 @@ namespace WarriosManagement
             skinManager.AddFormToManage(this);
             skinManager.Theme = MaterialSkinManager.Themes.DARK;
             skinManager.ColorScheme = new ColorScheme(
-                Primary.BlueGrey900,  // Fondo principal muy oscuro
-                Primary.BlueGrey800,  // Fondo de barra de título
-                Primary.BlueGrey500,  // Color de controles activos
-                Accent.Cyan700,       // Color de acento como el texto que usas
-                TextShade.WHITE       // Texto blanco
+                Primary.BlueGrey900,
+                Primary.BlueGrey800,
+                Primary.BlueGrey500,
+                Accent.Cyan700,
+                TextShade.WHITE
             );
 
             categorias();
             cbCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
             cbCategoria.SelectedIndexChanged += CbCategoria_SelectedIndexChanged;
-
             CargarDatosAtleta();
-           
         }
 
         private void CargarDatosAtleta()
@@ -68,12 +66,12 @@ namespace WarriosManagement
             {
                 MessageBox.Show("No se encontraron datos para este atleta.");
             }
-            this.Text = "" + atleta.NombreCompleto+"    "+atleta.NombreCategoria;
+            this.Text = "" + atleta.NombreCompleto + "    " + atleta.NombreCategoria;
         }
 
         private void cerrar(object sender, FormClosingEventArgs e)
         {
-            Environment.Exit(0);
+            this.Dispose();
         }
 
         private void itemVerRanking_Click(object sender, EventArgs e)
@@ -153,6 +151,38 @@ namespace WarriosManagement
             var vista = new VistaEstadisticasAtleta(idAtleta);
             vista.ShowDialog();
 
+        }
+
+        private void pictureBoxFoto_Click(object sender, EventArgs e)
+        {
+            var resultado = MessageBox.Show("¿Deseas cambiar o eliminar la foto?", "Foto del atleta",
+       MessageBoxButtons.YesNoCancel,
+       MessageBoxIcon.Question,
+       MessageBoxDefaultButton.Button1,
+       0,
+       "Sí: Cambiar, No: Eliminar, Cancelar: Salir");
+
+            if (resultado == DialogResult.Yes)
+            {
+                OpenFileDialog ofd = new OpenFileDialog
+                {
+                    Filter = "Archivos de imagen|*.jpg;*.jpeg;*.png;*.bmp"
+                };
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    byte[] nuevaImagen = File.ReadAllBytes(ofd.FileName);
+                    pictureBoxFoto.Image = Image.FromFile(ofd.FileName);
+                    AtletaRepositorio.ActualizarImagen(idAtleta, nuevaImagen);
+                    MessageBox.Show("Imagen actualizada.");
+                }
+            }
+            else if (resultado == DialogResult.No)
+            {
+                pictureBoxFoto.Image = null;
+                AtletaRepositorio.ActualizarImagen(idAtleta, null);
+                MessageBox.Show("Imagen eliminada.");
+            }
         }
     }
 }

@@ -31,20 +31,19 @@
             this.dgvRanking.Name = "dgvRanking";
             this.dgvRanking.ReadOnly = true;
             this.dgvRanking.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvRanking.Size = new System.Drawing.Size(1345, 483);
+            this.dgvRanking.Size = new System.Drawing.Size(1056, 357);
             this.dgvRanking.TabIndex = 0;
-            this.dgvRanking.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvRanking_CellDoubleClick);
             // 
             // cbCategoria
             // 
-            this.cbCategoria.Location = new System.Drawing.Point(1134, 37);
+            this.cbCategoria.Location = new System.Drawing.Point(840, 37);
             this.cbCategoria.Name = "cbCategoria";
             this.cbCategoria.Size = new System.Drawing.Size(200, 21);
             this.cbCategoria.TabIndex = 21;
             // 
             // txtBuscarNombre
             // 
-            this.txtBuscarNombre.Location = new System.Drawing.Point(500, 37);
+            this.txtBuscarNombre.Location = new System.Drawing.Point(362, 37);
             this.txtBuscarNombre.Name = "txtBuscarNombre";
             this.txtBuscarNombre.Size = new System.Drawing.Size(183, 20);
             this.txtBuscarNombre.TabIndex = 22;
@@ -54,7 +53,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1351, 550);
+            this.ClientSize = new System.Drawing.Size(1062, 424);
             this.Controls.Add(this.txtBuscarNombre);
             this.Controls.Add(this.cbCategoria);
             this.Controls.Add(this.dgvRanking);
