@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WarriosManagement.AltaCampeonato" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ARAAcCABgHAACAgEAgCAAIESCCAAAAQABBAggAACIiA=</HashCode>
+      <FileName>AltaCampeonato.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WarriosManagement.AltaEnfrentamientos" Collapsed="true">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JQQAARYAAiDwAAAMsAWABJECQAgIiAABgAAAgEAAAQA=</HashCode>
+      <FileName>AltaEnfrentamientos.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WarriosManagement.EditarEntrenador" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAACAAAOAACAAAAACAIAECACAQIAAAAAAQAAAAAAA=</HashCode>
+      <FileName>EditarEntrenador.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WarriosManagement.ListaEntrenadores" Collapsed="true">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAACAAIAAAAACBAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ListaEntrenadores.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WarriosManagement.Login">
+    <Position X="6.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAEAAAACAAACAAAASAAIACAAAgCIQAAAAAAABAAAA=</HashCode>
+      <FileName>Login.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WarriosManagement.SolicitudAlta" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAJIEAAEEAEAMQEFAABQAALECAABAAJACEwAEASAgA=</HashCode>
+      <FileName>SolicitudAlta.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WarriosManagement.VistaAtleta" Collapsed="true">
+    <Position X="4.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAOCRBZAEAACAQIASAAQAEAABAAAAAAAKAAQ=</HashCode>
+      <FileName>VistaAtleta.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WarriosManagement.VistaEntrenador" Collapsed="true">
+    <Position X="6" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAOCRBBAEAAiAQIASAAQAAAAAAAAAAAAIAQQ=</HashCode>
+      <FileName>VistaEntrenador.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WarriosManagement.VistaEstadisticasAtleta">
+    <Position X="8.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAgIQACAAERQACAGAIKACACAAAAAAQAQAAAQhAAA=</HashCode>
+      <FileName>VistaEstadisticasAtleta.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WarriosManagement.VistaRankingPorCategoria">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAmABAAAEAACAAIEWAQAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>VistaRankingPorcategoria.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AccesoDatosWM.ArbitroRepositorio">
+    <Position X="2.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="AccesoDatosWM.EntrenadorRepositorio">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
